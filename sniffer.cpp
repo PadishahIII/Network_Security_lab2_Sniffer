@@ -134,14 +134,21 @@ int main(int argc, char **argv)
         pcap_freealldevs(NetworkDevices);
         exit(-1);
     }
+    bpf_u_int32 net_mask;
+    bpf_u_int32 net_ip;
+    char bpf_filter_string[] = "ip";
+    struct bpf_program bpf_filter;
+    pcap_compile(handle, &bpf_filter, bpf_filter_string, 0, net_ip);
+    pcap_setfilter(handle, &bpf_filter);
     if (!all_opt)
-        cout << "DST MAC ADDRESS  "
-             << "SRC MAC ADDRESS "
-             << "DST IP ADDRESS  "
-             << "SRC IP ADDRESS  "
-             << "PROTOCOL"
-             << "  DST PORT  "
-             << "  SRC PORT " << endl;
+        cout
+            << "DST MAC ADDRESS  "
+            << "SRC MAC ADDRESS "
+            << "DST IP ADDRESS  "
+            << "SRC IP ADDRESS  "
+            << "PROTOCOL"
+            << "  DST PORT  "
+            << "  SRC PORT " << endl;
     pcap_loop(handle, -1, handle_ethernet_pkt, NULL);
     pcap_freealldevs(NetworkDevices);
     pcap_close(handle);
