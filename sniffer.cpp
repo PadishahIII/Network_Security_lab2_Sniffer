@@ -138,7 +138,30 @@ int main(int argc, char **argv)
     bpf_u_int32 net_ip;
     char bpf_filter_string[] = "ip";
     struct bpf_program bpf_filter;
-    pcap_compile(handle, &bpf_filter, bpf_filter_string, 0, net_ip);
+    string input;
+    getchar();
+    while (true)
+    {
+        cout << "Input filter rule:(default:\"ip\")" << endl;
+        getline(cin, input);
+        if (input.empty())
+        {
+            pcap_compile(handle, &bpf_filter, bpf_filter_string, 0, net_ip);
+            break;
+        }
+        else
+        {
+            if (pcap_compile(handle, &bpf_filter, input.c_str(), 0, net_ip) < 0)
+            {
+                cout << "Invaild filter rule!" << '\"' << input << '\"' << endl;
+                continue;
+            }
+            else
+            {
+                break;
+            }
+        }
+    }
     pcap_setfilter(handle, &bpf_filter);
     if (!all_opt)
         cout
