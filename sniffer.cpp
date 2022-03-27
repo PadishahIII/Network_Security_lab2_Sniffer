@@ -245,17 +245,21 @@ void handle_ethernet_pkt(u_char *argument, const struct pcap_pkthdr *packet_head
             {
                 fprintf(file, "TCP      ");
                 struct tcp *tcp = (struct tcp *)(ip + 1);
-                convert((u_char *)&tcp->dst_port, sizeof(u_short));
-                convert((u_char *)&tcp->src_port, sizeof(u_short));
-                fprintf(file, "%u          %u\n", tcp->dst_port, tcp->src_port);
+                u_short sp = tcp->src_port;
+                u_short dp = tcp->dst_port;
+                convert((u_char *)&sp, sizeof(u_short));
+                convert((u_char *)&dp, sizeof(u_short));
+                fprintf(file, "%u          %u\n", dp, sp);
             }
             else if (ip->protocol == 0x11) // UDP
             {
                 fprintf(file, "UDP       ");
                 struct udp *udp = (struct udp *)(ip + 1);
-                convert((u_char *)&udp->src_port, sizeof(u_short));
-                convert((u_char *)&udp->src_port, sizeof(u_short));
-                fprintf(file, "%u          %u\n", udp->dst_port, udp->src_port);
+                u_short sp = udp->src_port;
+                u_short dp = udp->dst_port;
+                convert((u_char *)&sp, sizeof(u_short));
+                convert((u_char *)&dp, sizeof(u_short));
+                fprintf(file, "%u          %u\n", dp, sp);
             }
         }
     }
